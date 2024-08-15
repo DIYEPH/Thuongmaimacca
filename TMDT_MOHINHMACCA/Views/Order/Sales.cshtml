@@ -1,0 +1,312 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Đơn bán của bạn";
+}
+@model IEnumerable<Order>
+@section Style {
+    @* <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet"> *@
+    <link href="css/order.css" rel="stylesheet">
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="osahan-account-page-right shadow-sm bg-white p-4 h-100">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane  fade  active show" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                        <h4 class="font-weight-bold mt-0 mb-4">Các đơn bán của bạn</h4>
+                        @if (Model.Count() == 0)
+                        {
+                            <p>Chưa có đơn hàng nào</p>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model)
+                            {
+
+                                <div class="bg-white card mb-4 order-list shadow-sm" id="@item.OrderId">
+                                    <div class="gold-members p-4">
+                                        <div class="media">
+                                            <div class="w3-container">
+                                                <div class="w3-row">
+                                                    <div class="w3-col m4">
+                                                        <a href="/postdetail?id=@item.PostId">
+                                                            <img class="w3-margin-right mr-4" src="@item.Post.CoverImage" alt="Generic placeholder image">
+                                                            <span class="w3-margin-bottom">
+                                                                <span class="w3-text-blue h5">@item.Post.Title</span>
+                                                            </span>
+                                                        </a>
+                                                        <p class="mb-0 text-black text-primary pt-2">
+                                                            <span class="text-black font-weight-bold"> Số tiền thỏa thuận:</span> @item.Price?.ToString("N0") VNĐ
+                                                        </p>
+                                                        <p class="text-dark">
+                                                            <strong>Chi tiết yêu cầu: </strong>
+                                                            @{
+                                                                string requirements = item.Requirements;
+                                                                string first200Chars = requirements.Length > 200 ? requirements.Substring(0, 200) + "..." : requirements;
+                                                            }
+                                                            @Html.Raw(first200Chars)
+
+                                                        </p>
+                                                    </div>
+                                                    <div class="w3-col m3">
+
+                                                        <p class="w3-text-gray w3-margin-bottom"><i class="icofont-list"></i> Mã đơn: @item.OrderId<i class="icofont-clock-time w3-margin-left"></i> Thời hạn: @item.Numberday ngày</p>
+
+                                                        <a href="/orderdetail?id=@item.OrderId" class="w3-text-info">Xem chi tiết đơn hàng <i class="icofont-check-circled w3-text-success"></i></a>
+                                                        <p class="text-gray mb-1">
+                                                            <i class="icofont-location-arrow"></i> Người mua:  <a href="/user?username=@item.Buyer">@item.BuyerNavigation.Fullname</a>
+                                                        </p>
+
+                                                    </div>
+                                                    <div class="w3-col m5">
+                                                        <p class="w3-right-align w3-text-info">@item.OrderTime?.ToString("dd/MM/yyyy hh:mm:ss") <i class="icofont-check-circled w3-text-success"></i></p>
+                                                        <div id="status_@item.OrderId">
+
+                                                            @if (item.Status == "5")
+                                                            {
+                                                                <div class="w3-text-red" id="status_@item.OrderId">
+                                                                    Đơn hàng đã bị hủy
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="steps" id="steps_@item.OrderId">
+                                                                    <div class="steps-header">
+                                                                        <div class="progress">
+                                                                            @{
+                                                                                int width = (item.Status == "3") ? 100 : ((item.Status == "1") ? 33 : ((item.Status == "2") ? 66 : 0));
+                                                                            }
+                                                                            <div class="progress-bar" id="progressbar_@item.OrderId" role="progressbar" style="width: @(width)%" aria-valuemin="0" aria-valuemax="100"> </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="steps-body">
+                                                                        <a href="#@item.OrderId" id="step1_@item.OrderId" onclick="acceptOrder(@item.OrderId)" class="step @(item.Status == "0"? "w3-blue" : "") @(item.Status == "1" || item.Status == "2" || item.Status == "3" ? "w3-text-green" : "")">
+                                                                            <span class="step-icon">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                                     height="24" viewBox="0 0 24 24" id="svg1_@item.OrderId" fill="none" stroke=" @(item.Status == "0"? "white" : "") @(item.Status == "1" || item.Status == "2" || item.Status == "3"  ? "green" : "")" stroke-width="2"
+                                                                                     stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle">
+                                                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                                                </svg>
+                                                                            </span><span id="buttonText1_@item.OrderId">
+                                                                                @(item.Status == "0" ? "Xác nhận đơn hàng" : "Đã xác nhận")
+                                                                            </span>
+                                                                        </a>
+                                                                        <a href="#@item.OrderId" id="step2_@item.OrderId" onclick="finishedOrder(@item.OrderId)" class="step @(item.Status == "1"? "w3-blue" : "") @(item.Status == "2" || item.Status == "3" ? "w3-text-green" : "")">
+                                                                            <span class="step-icon">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" id="svg2_@item.OrderId" width="24"
+                                                                                     height="24" viewBox="0 0 24 24" fill="none" stroke="@(item.Status == "1"? "white" : "") @(item.Status == "2" || item.Status == "3" ? "green" : "")" stroke-width="2"
+                                                                                     stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle">
+                                                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                                                </svg>
+                                                                            </span><span id="buttonText2_@item.OrderId">
+                                                                                Đang thực hiện
+                                                                            </span>
+                                                                        </a>
+
+                                                                        <a href="#@item.OrderId" id="step3_@item.OrderId" onclick="completeOrder(@item.OrderId)" class="step @(item.Status == "3" ? "w3-green" : "") @(item.Status == "2" ? "w3-blue" : "") ">
+                                                                            <span class="step-icon">
+                                                                                <svg id="svg3_@item.OrderId" xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                                     height="24" viewBox="0 0 24 24" fill="none" stroke="@(item.Status == "3" || item.Status == "3" ? "white" : "")" stroke-width="2"
+                                                                                     stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle">
+                                                                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                                                </svg>
+                                                                            </span><span id="buttonText3_@item.OrderId">
+                                                                                Hoàn thành
+                                                                            </span>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            }
+
+                                                        </div>
+
+                                                        <div class="float-right">
+                                                            @if (item.Status == "3" && item.Star != null)
+                                                            {
+                                                                <a class="btn btn-sm btn-outline-primary" href="/postdetail?id=@item.PostId"><i class="icofont-headphone-alt"></i> XEM ĐÁNH GIÁ</a>
+                                                            }
+                                                            @if (item.Status == "0")
+                                                            {
+                                                                <a class="btn btn-sm btn-primary" id="cancel_@item.OrderId" onclick="rejectOrder(@item.OrderId)" href="#"><i class="icofont-refresh"></i>HỦY</a>
+                                                            }
+                                                        </div>
+
+                                                        <div id="link_@item.OrderId">
+                                                            @if (item.Status == "2" || item.Status == "3")
+                                                            {
+                                                                <p class="mb-0 text-black text-primary pt-2">
+                                                                    <span class="text-black font-weight-bold">Link sản phẩm:</span>
+                                                                    <input type="text" style="width:100%" value="@item.Link" id="inputlink_@item.OrderId" />
+                                                                </p>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Script {
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function rejectOrder(orderId) {
+            if (confirm('Bạn có chắc muốn từ chối đơn hàng này?')) {
+                fetch('/api/OrderAPI/cancelOrder?orderId=' + orderId, { method: 'PUT' })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to update order status');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert("Đơn hàng đã được hủy thành công");
+                        const statusElement = document.getElementById('status_' + orderId);
+                        const stepsElement = document.getElementById('steps_' + orderId);
+                        const cancelElement = document.getElementById('cancel_' + orderId);
+                        statusElement.innerText = "Đơn hàng đã bị từ chối bởi bạn";
+                        statusElement.classList.add('w3-text-red');
+                        stepsElement.style.display = 'none';
+                        cancelElement.style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('Error updating order status:', error);
+                        alert('Có lỗi xảy ra khi hủy đơn hàng.');
+                    });
+            }
+        }
+
+        function acceptOrder(orderId) {
+            if (confirm('Để xác nhận đơn hàng này, bạn cần trả cho chúng tôi 2000 VNĐ, bạn đồng ý không?')) {
+                fetch("/api/OrderAPI/checkoutAccept?orderId=" + orderId, { method: 'POST' })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errorData => {
+                                if (errorData.insufficientBalance) {
+                                    if (confirm('Tài khoản của bạn không đủ tiền, bạn muốn nạp tiền không?')) {
+                                        window.location.href = '/recharge';
+                                        // Return a rejected promise to stop further execution
+                                        return Promise.reject('Tài khoản không đủ tiền, điều hướng đến trang nạp tiền');
+                                    }
+                                    // Return a rejected promise to stop further execution
+                                    return Promise.reject('Tài khoản không đủ tiền');
+                                } else {
+                                    throw new Error('Khởi tạo thanh toán không thành công');
+                                }
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        return fetch('/api/OrderAPI/acceptOrder?orderId=' + orderId, { method: 'PUT' });
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to accept order status');
+                        }
+                        console.log('Đơn hàng đã được chấp nhận thành công.');
+                        alert("Đơn hàng đã được xác nhận thành công");
+                        const btnTextElement = document.getElementById('buttonText1_' + orderId);
+                        const progressbarElement = document.getElementById('progressbar_' + orderId);
+                        const step1Element = document.getElementById('step1_' + orderId);
+                        const svg1Element = document.getElementById('svg1_' + orderId);
+                        const step2Element = document.getElementById('step2_' + orderId);
+                        const svg2Element = document.getElementById('svg2_' + orderId);
+                        const cancelElement = document.getElementById('cancel_' + orderId);
+                        btnTextElement.textContent = "Đã xác nhận";
+                        progressbarElement.style.width = '33%';
+                        step1Element.classList.remove('w3-blue');
+                        step1Element.classList.add('w3-text-green');
+                        svg1Element.setAttribute('stroke', 'green');
+                        step2Element.classList.add('w3-blue');
+                        svg2Element.setAttribute('stroke', 'white');
+                        cancelElement.style.display = 'none';
+                    })
+                    .catch(error => {
+                        if (error !== 'Tài khoản không đủ tiền, điều hướng đến trang nạp tiền') {
+                            alert('Có lỗi xảy ra khi xác nhận.');
+                        }
+                    });
+            }
+        }
+        function finishedOrder(orderId) {
+            if (confirm('Bạn đã thực hiện xong?')) {
+                fetch('/api/OrderAPI/finishedOrder?orderId=' + orderId, { method: 'PUT' })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to accept order status');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert("Đã xác nhận thực hiện xong");
+                        window.location.href = "/mysales#" + orderId;
+                        window.location.reload(true);
+                    })
+                    .catch(error => {
+                        console.error('Error updating order status:', error);
+                        alert('Có lỗi xảy ra khi xác nhận.');
+                    });
+            }
+        }
+        function completeOrder(orderId) {
+            var linkInput = document.getElementById("inputlink_" + orderId);
+
+            if (linkInput !== null) {
+                // Kiểm tra xem người dùng đã nhập vào ô input hay chưa
+                var linkValue = linkInput.value.trim(); // Lấy giá trị và loại bỏ khoảng trắng
+
+                if (linkValue === '') {
+                    // Nếu không có giá trị nhập vào, hiển thị thông báo và không tiếp tục
+                    alert('Vui lòng nhập đường link sản phẩm.');
+                    return; // Dừng hàm và không thực hiện tiếp các bước sau
+                }
+
+                if (confirm('Bạn muốn hoàn thành đơn hàng?')) {
+                    var requestData = {
+                        OrderId: orderId,
+                        Link: linkValue
+                    };
+
+                    fetch('/api/OrderAPI/completeOrder', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to accept order status');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            alert("Đơn hàng đã được hoàn thành");
+                            window.location.href = "/mysales#" + orderId;
+                            window.location.reload(true);
+                        })
+                        .catch(error => {
+                            console.error('Error updating order status:', error);
+                            alert('Có lỗi xảy ra khi chấp nhận đơn hàng.');
+                        });
+                }
+            } else {
+                alert('Không tìm thấy input link cho đơn hàng này.');
+            }
+        }
+    </script>
+}

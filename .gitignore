@@ -1,0 +1,20 @@
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# Visual Studio 2019/2022 Cache
+.vs/
+.vscode/
+
+# Other
+*.log

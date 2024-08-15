@@ -1,0 +1,199 @@
+﻿@{
+    var currentAction = ViewContext.RouteData.Values["action"].ToString();
+    var currentController = ViewContext.RouteData.Values["controller"].ToString();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" href="/img/logo.png" type="image/x-icon" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    <!-- Syncfusion ASP.NET Core controls scripts -->
+    <script src="https://cdn.syncfusion.com/ej2/25.1.35/dist/ej2.min.js"></script>
+   
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+    <!-- Icon Font Stylesheet -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/style.css" rel="stylesheet">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8Q71QC0CHZ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-8Q71QC0CHZ');
+    </script>
+    @RenderSection("Style", required: false)
+</head>
+<body>
+    <div id="main">
+        <div class="container-xxl bg-white p-0">
+            <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+                <a href="index.html" class="navbar-brand d-flex align-items-center text-center py-0 px-4 px-lg-5">
+                    <h1 class="m-0 text-primary">ProCodeHire</h1>
+                </a>
+                <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto p-4 p-lg-0">
+                        <a href="/" class="nav-item nav-link @(currentAction == "Index" && currentController == "Home" ? "active" : "")" ">Trang chủ</a>
+                        <a href="/choose" class="nav-item nav-link @(currentAction == "Choose" && currentController == "DoPost" ? "active" : "")"">Đăng bài</a>
+
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <a href="/contact" class="nav-item nav-link">Liên hệ</a>
+                        }
+                        else
+                        {                          
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Cá nhân</a>
+                                <div class="dropdown-menu rounded-0 m-0">
+                                    <a href="/myprofile" class="dropdown-item">Trang cá nhân</a>
+                                    <a href="/myorders" class="dropdown-item">Đơn mua của tôi</a>
+                                    <a href="/mysales" class="dropdown-item">Đơn bán của tôi</a>
+                                    <a href="/myhistorytransaction" class="dropdown-item">Lịch sử giao dịch</a>
+                                    <a href="/usermanual" class="dropdown-item">Hướng dẫn sử dụng</a>
+                                    <a href="/logout" class="dropdown-item">Đăng xuất</a>
+                                    
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <a href="/login" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Đăng nhập</a>
+                    }
+                    else
+                    {
+                        <a href="/chat" class="nav-item nav-link">Tin nhắn<span class="w3-badge w3-red" data-bind="text: messageUnread"></span></a>                   
+                        <a href="/recharge" class="nav-item nav-link @(currentAction == "Index" && currentController == "Recharge" ? "active" : "")" "" "><i class="fa fa-dollar"></i>@await Component.InvokeAsync("Balances") VNĐ</a>
+                        <a href="/myprofile" class="py-4 px-lg-5 d-none d-lg-block">
+                            @await Component.InvokeAsync("AvatarProfile")
+                        </a>
+                    }
+
+                </div>
+            </nav> 
+            @RenderBody()
+            <!-- Testimonial End -->
+            <!-- Footer Start -->
+            <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+                <div class="container py-5">
+                    <div class="row g-5">
+                        <div class="col-lg-3 col-md-6">
+                            <h5 class="text-white mb-4">Công ty</h5>
+                            <a class="btn btn-link text-white-50" href="">Về chúng tôi</a>
+                            <a class="btn btn-link text-white-50" href="">Liên hệ chúng tôi</a>
+                            <a class="btn btn-link text-white-50" href="">Dịch vụ của chúng tôi</a>
+                            <a class="btn btn-link text-white-50" href="">Chính sách bảo mật</a>
+                            <a class="btn btn-link text-white-50" href="">Điều khoản & Điều kiện</a>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <h5 class="text-white mb-4">Liên kết nhanh</h5>
+                            <a class="btn btn-link text-white-50" href="">Về chúng tôi</a>
+                            <a class="btn btn-link text-white-50" href="">Liên hệ chúng tôi</a>
+                            <a class="btn btn-link text-white-50" href="">Dịch vụ của chúng tôi</a>
+                            <a class="btn btn-link text-white-50" href="">Chính sách bảo mật</a>
+                            <a class="btn btn-link text-white-50" href="">Điều khoản & Điều kiện</a>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <h5 class="text-white mb-4">Liên hệ</h5>
+                            <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>48 Cao Thắng, Hải Châu, Đà Nẵng</p>
+                            <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>0905.123.456</p>
+                            <p class="mb-2"><i class="fa fa-envelope me-3"></i>procodehire48@gmail.com</p>
+                            <div class="d-flex pt-2">
+                                <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                                <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <h5 class="text-white mb-4">Bản tin</h5>
+                            <div class="position-relative mx-auto" style="max-width: 400px;">
+                                <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="Email">
+                                <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">Đăng kí</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="copyright">
+                        <div class="row">
+                            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                                &copy; <a class="border-bottom" href="#">ProCodeHire</a>, All Right Reserved.
+
+                                <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                                Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a>
+                            </div>
+                            <div class="col-md-6 text-center text-md-end">
+                                <div class="footer-menu">
+                                    <a href="">Home</a>
+                                    <a href="">Cookies</a>
+                                    <a href="">Help</a>
+                                    <a href="">FQAs</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
+            <!-- Back to Top -->
+            <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        </div>
+        <script>
+            function w3_open() {
+                document.getElementById("main").style.marginLeft = "15%";
+                document.getElementById("mySidebar").style.width = "15%";
+                document.getElementById("mySidebar").style.display = "block";
+                document.getElementById("openNav").style.display = 'none';
+            }
+            function w3_close() {
+                document.getElementById("main").style.marginLeft = "0%";
+                document.getElementById("mySidebar").style.display = "none";
+                document.getElementById("openNav").style.display = "inline-block";
+            }
+        </script>
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/lib/wow/wow.min.js"></script>
+        <script src="~/lib/easing/easing.min.js"></script>
+        <script src="~/lib/waypoints/waypoints.min.js"></script>
+        <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+        <script src="~/ckeditor/ckeditor.js"></script>
+        <script src="~/lib/knockout/knockout-latest.min.js"></script>
+        <script src="~/lib/microsoft-signalr/signalr.min.js"></script>
+        <script src="~/js/chat.js" asp-append-version="true"></script>
+        <!-- Template Javascript -->
+        <script src="~/js/main.js"></script>
+        @RenderSection("Script", required: false)
+</body>
+
+</html>

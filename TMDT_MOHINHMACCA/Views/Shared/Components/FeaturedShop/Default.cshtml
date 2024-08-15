@@ -1,0 +1,48 @@
+﻿@using TMDT_MOHINHMACCA.ViewModels
+@model IEnumerable<PostVM>
+
+@foreach (var item in Model)
+{
+    <a class="d-flex align-items-center justify-content-start" href="/postdetail?id=@item.PostId">
+        <div class="rounded me-4" style="width: 100px; height: 100px;">
+            <img src="@item.CoverImage" class="img-fluid rounded" alt="">
+        </div>
+        <div>
+            <h6 class="mb-2">@item.Title</h6>
+            <div class="d-flex mb-2">
+                <div class="d-flex mb-2">
+                    @{
+                        double rating = (double) item.Star;
+                        int fullStars = (int)Math.Floor(rating);
+                        int halfStar = (rating - fullStars >= 0.5) ? 1 : 0;
+                        int emptyStars = 5 - fullStars - halfStar;
+                    }
+
+                    @for (int i = 0; i < fullStars; i++)
+                    {
+                        <i class="fa fa-star text-secondary"></i>
+                    }
+                    @if (halfStar == 1)
+                    {
+                        <i class="fa fa-star-half-alt text-secondary"></i> <!-- Use the appropriate class for a half star -->
+                    }
+                    @for (int i = 0; i < emptyStars; i++)
+                    {
+                        <i class="fa fa-star"></i>
+                    }
+                </div>
+            </div>
+            <div class="d-flex mb-2">
+
+                @if (item.PriceUp == 0 && item.PriceTo == 0)
+                {
+                    <span class="w3-text-blue">Liên hệ</span>
+                }
+                else
+                {
+                    <span class="fw-bold me-2">@item.PriceUp?.ToString("N0") VNĐ - @item.PriceTo?.ToString("N0") VNĐ</span>            
+                }
+            </div>
+        </div>
+    </a>
+}

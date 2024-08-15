@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/_LayoutAdmin.cshtml";
+    ViewData["PageTitle"] = "Quản lý tài khoản";
+}
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page" href="/admin/account/index">Quản lý tài khoản</li>
+                </ol>
+                <h6 class="font-weight-bolder mb-0">Quản lý tài khoản</h6>
+                @if (ViewData["Error"] != null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fa fa-exclamation-circle" style="color:white"></i><strong style="color:white"> @ViewData["Error"]</strong>
+                    </div>
+                }
+            </nav>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+        <div class="col-xl-4">
+            <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                <label for="fruits">Phân loại theo:</label>
+                <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3" form="fruitform">
+                    <option value="volvo">Tất cả</option>
+                    <option value="volvo">Admin</option>
+                    <option value="volvo">Người dùng</option>
+                    <option value="saab">Bình thường</option>
+                    <option value="opel">Bị khóa</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Danh sách các tài khoản</h6>
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tài khoản</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Loại tài khoản</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hành động</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày đăng ký</th>
+                                        <th class="text-secondary opacity-7"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @await Component.InvokeAsync("AccountManager", new { page = (string)null, searchInput = "", type = (string)null })
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

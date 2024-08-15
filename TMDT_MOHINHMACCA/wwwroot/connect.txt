@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext "Server=localhost;Database=Shopmacca;Trusted_Connection=True;Encrypt=False" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models

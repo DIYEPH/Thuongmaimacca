@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Đổi mật khẩu mới";
+    Layout = "_AccessLayout";
+}
+
+<div id="content">
+    <div class="wrapper-form">
+        <div class="alert alert-info" role="alert">
+            <i class="fa fa-exclamation-circle" style="color:white"></i><strong style="color:white "> Mã khôi phục đã được gửi tới email của bạn!</strong>
+        </div>
+        @using (Html.BeginForm("Reset", "Access", FormMethod.Post))
+        {
+            <h1 style="color:white">Đổi mật khẩu mới</h1>
+            
+            <div class="input-box">
+                <input type="text" name="UserName" placeholder="Tên đăng nhập" value="@ViewBag.UserName" required>
+                <i class="fa fa-user" aria-hidden="true"></i>
+            </div>
+            <div class="input-box">
+                <input type="text" name="TokenCode" placeholder="Mã khôi phục"  required>
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+            </div>
+            <div class="input-box">
+                <input type="password" name="NewPassword" placeholder="Mật khẩu mới" required>
+                <i class="fa fa-lock" aria-hidden="true"></i>
+            </div>
+            <div class="input-box">
+                <input type="password" name="ConfirmPassword" placeholder="Nhập lại mật khẩu mới" required>
+                <i class="fa fa-lock" aria-hidden="true"></i>
+            </div>
+
+
+            <button type="submit" class="btn">Đổi mật khẩu</button>
+            <br />
+            <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                <p class="mb-4 text-sm mx-auto">
+                    Đã có tài khoản?
+                    <a href="/login" class="text-info text-gradient font-weight-bold">Đăng nhập</a>
+                </p>
+            </div>
+
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                <i class="fa fa-exclamation-circle" style="color:white"></i>
+                <strong style="color:white"> @TempData["ErrorMessage"]</strong>
+            </div>
+        }
+    </div>
+</div>

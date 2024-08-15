@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Nạp tiền";
+}
+<form asp-action="Index" asp-controller="Recharge" method="post">
+    <div class="container mt-5">
+        <div class="card">
+            <h5 class="card-header text-center">Nạp tiền</h5>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Chọn mệnh giá:</label>
+                    <input name="username" value="@User.Identity.Name" hidden ></input>
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <div class="btn-group-toggle btn-group-lg" data-toggle="buttons">
+                                <label class="btn btn-outline-primary">
+                                    <input type="radio" name="deposit_amount" value="15000" checked>  15000 VNĐ
+                                </label>
+                                <label class="btn btn-outline-primary">
+                                    <input type="radio" name="deposit_amount" value="20000">  20000 VNĐ
+                                </label>
+                                <label class="btn btn-outline-primary">
+                                    <input type="radio" name="deposit_amount" value="50000">  50000 VNĐ
+                                </label>
+                                <label class="btn btn-outline-primary">
+                                    <input type="radio" name="deposit_amount" value="100000">  100000 VNĐ
+                                </label>
+                                <label class="btn btn-outline-primary">
+                                    <input type="radio" value="custom">  Mệnh giá khác
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 custom-amount">
+                        <input type="text" name="deposit_amount" class="form-control" placeholder="Nhập số tiền">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Select Payment Method:</label>
+                    <div class="custom-control custom-radio">
+                        <input type="radio"  name="payment_method" value="VNPay" class="custom-control-input"  checked>
+                        <img style="width:80px;height:40px" src="https://stcd02206177151.cloud.edgevnpay.vn/assets/images/logo-icon/logo-primary.svg" alt="VNPay">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Thanh toán</button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,17 @@
+﻿@using TMDT_MOHINHMACCA.ViewModels
+@model ProfileVM
+
+@if (Model != null)
+{
+    <img src="@Model.Avatar" alt="Avatar" class="avatar" />
+    string displayName = Model.Fullname;
+    if (displayName.Length > 10)
+    {
+        int lastSpaceIndex = displayName.LastIndexOf(' ');
+        if (lastSpaceIndex != -1 && displayName.Length - lastSpaceIndex > 5)
+        {
+            displayName = "... " + displayName.Substring(lastSpaceIndex + 1);
+        }
+    }
+    <strong>@displayName</strong>
+}

@@ -1,0 +1,286 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Đăng bài";
+}
+@model Post
+@section Style {
+    <link rel="stylesheet" href="css/modal.css" />
+    <style>
+        #paymentFrame {
+            /* Các thuộc tính hiện tại của bạn */
+            position: fixed;
+            z-index: 9999;
+            overflow: auto;
+            left: 0;
+            top: 0;
+            border: none;
+            width: 100vw; /* Chiều rộng bằng 100% của viewport width */
+            height: 100vh; /* Chiều cao bằng 100% của viewport height */
+            display: none;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+}
+<!-- Post Start -->
+<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <div class="">
+            <h4 style="text-align: center;" class="mb-4">Thiết kế bài đăng của bạn</h4>
+            <div style="background-color: rgb(220, 228, 250)" class="w3-card-4">
+                <div style="padding:20px" class="row g-2">
+                    <div class="col-12 col-sm-2">
+                        Danh mục bài đăng:
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        @await Component.InvokeAsync("Categories")
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <input type="text" class="form-control" id="Title" placeholder="Tiêu đề" oninput="checkTitleLength()">
+                        <small id="charCount" style="display: block; margin-top: 5px;">0/60 ký tự</small>
+                    </div>
+                    <div style="margin: auto;" class="col-12 col-sm-2">
+                        Ảnh bìa:
+                    </div>
+                    <div class="col-12 col-sm-6" style="margin: auto;">
+                        <input type="file" id="coverImage" class="form-control bg-white" style="width:80%" accept="image/*" onchange="displaySelectedImage()">
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <div style="width:100%;height:150px;border:dotted; border-width:1px;">
+                            <img id="imgcover" style="width:100%;height:100%; object-fit: cover;" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-2">
+                        Công nghệ sử dụng:
+                    </div>
+                    <div class="col-12 col-sm-10" id="technologyList">
+                        <div class="w3-margin-bottom">
+                            <input class="w3-check" type="checkbox" name="items">
+                            <label>Java</label>
+                        </div>
+                        <div class="w3-margin-bottom">
+                            <input class="w3-check" type="checkbox" name="items">
+                            <label>C#</label>
+                        </div>
+                        <div class="w3-margin-bottom">
+                            <input class="w3-check" type="checkbox" name="items">
+                            <label>Python</label>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-sm-6">
+                                <input type="text" name="techinput" class="form-control"  placeholder="Tên công nghệ bạn sử dụng">
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <button type="button" onclick="addTechnology()" class="w3-button w3-small w3-teal w3-border w3-border-blue">Thêm công nghệ</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-2" >
+                        Chọn giá:
+                    </div>
+                    <div class="col-12 col-sm-2" >
+                        <input class="w3-check" type="checkbox" id="priceContactCheckbox">
+                        <label for="priceContactCheckbox">Giá Liên Hệ</label>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <input class="form-control" id="priceup" placeholder="Giá từ (VNĐ)" type="number" min="0" step="1">
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <input class="form-control" id="priceto" placeholder="Giá đến (VNĐ)" type="number" min="0" step="1">
+                    </div>
+                    
+                    <div class="col-12 col-sm-12">
+                        Nội dung:
+                    </div>
+                    <div class="col-12">
+                        <textarea class="form-control" id="inputContent" name="Content"></textarea>
+                    </div>
+                    <div class="col-12 w3-center">
+                        <button class="btn btn-primary w-30 " id="btnsubmitPost" type="button" onclick="secureSubmit(this)">Đăng bài</button>
+                    </div>
+                    <div id="success" class="w3-panel w3-green w3-display-container " style="display:none">
+                        <span onclick="this.parentElement.style.display='none'"
+                              class="w3-button w3-green w3-large w3-display-topright">x</span>
+                        <h3>Thành công!</h3>
+                        <p>Bài đăng đã được đăng lên và đang chờ duyệt</p>
+                    </div>
+                    <div id="errorpost" class="w3-panel w3-red w3-display-container " style="display:none">
+                        <span onclick="this.parentElement.style.display='none'"
+                              class="w3-button w3-red w3-large w3-display-topright">x</span>
+                        <h3>Lỗi!</h3>
+                        <p>Lỗi chưa xác định.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Post End -->
+@section Script {
+    <script>
+
+        function checkTitleLength() {
+            var titleInput = document.getElementById("Title");
+            var charCount = document.getElementById("charCount");
+
+            if (titleInput.value.length > 60) {
+                titleInput.value = titleInput.value.slice(0, 60);
+            }
+
+            charCount.textContent = titleInput.value.length + "/60 ký tự";
+        }
+        function displaySelectedImage() {
+            const coverImageInput = document.getElementById('coverImage');
+            const imgCover = document.getElementById('imgcover');
+            if (coverImageInput.files.length > 0) {
+                const selectedFile = coverImageInput.files[0];
+                if (isValidImageFile(selectedFile)) {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        imgCover.src = event.target.result;
+                    };
+                    reader.readAsDataURL(selectedFile);
+                } else {
+                    alert('Vui lòng chọn một tệp hình ảnh.');
+                    coverImageInput.value = '';
+                    imgCover.src = '';
+                }
+            } else {
+                imgCover.src = ''; 
+            }
+        }
+
+        function isValidImageFile(file) {
+            const fileType = file.type;
+            return fileType.startsWith('image/');
+        }
+        CKEDITOR.replace('inputContent')
+        function addTechnology() {
+            var technologyList = document.getElementById("technologyList");
+            var inputElement = technologyList.querySelector('input[name="techinput"]');
+            var technologyName = inputElement.value.trim();
+            if (technologyName !== "") {
+                var newDiv = document.createElement("div");
+                newDiv.classList.add("w3-margin-bottom");
+                var newCheckbox = document.createElement("input");
+                newCheckbox.classList.add("w3-check");
+                newCheckbox.type = "checkbox";
+                newCheckbox.name = "items";
+                var newLabel = document.createElement("label");
+                newLabel.textContent = technologyName;
+                newDiv.appendChild(newCheckbox);
+                newDiv.appendChild(newLabel);
+                technologyList.insertBefore(newDiv, technologyList.lastElementChild);
+                inputElement.value = "";
+            }
+            else {
+                alert("Vui lòng nhập tên công nghệ trước khi thêm!");
+            }
+        }
+        function secureSubmit(button) {
+            var priceContactCheckbox = document.getElementById('priceContactCheckbox');
+            var cateId = document.getElementById('categoryselected').value;
+            var title = document.getElementById('Title').value;
+            if (!title) {
+                alert("Vui lòng nhập tiêu đề!");
+                return;
+            }
+            var coverImageFile = document.getElementById('coverImage').files[0];
+            if (!coverImageFile) {
+                alert("Vui lòng chọn ảnh bìa!");
+                return;
+            }
+            var checkboxes = document.querySelectorAll('input[name="items"]:checked');
+            var selectedTechnologies = [];
+            checkboxes.forEach(function (checkbox) {
+                selectedTechnologies.push(checkbox.nextElementSibling.textContent);
+            });
+            if (checkboxes.length === 0) {
+                alert("Vui lòng chọn ít nhất một công nghệ!");
+                return;
+            }
+            var priceUpInput = document.getElementById('priceup');
+            var priceToInput = document.getElementById('priceto');
+            var priceUp = parseFloat(priceUpInput.value);
+            var priceTo = parseFloat(priceToInput.value);
+            if (priceUp >= priceTo) {
+                alert("Giá từ phải nhỏ hơn giá đến!");
+            }
+            if (priceContactCheckbox.checked) {
+                priceUp = 0;
+                priceTo = 0;
+            }
+            var editorContent = CKEDITOR.instances.inputContent.getData();
+            if (!editorContent) {
+                alert("Vui lòng nhập mô tả!");
+                return;
+            }
+
+            var url = new URLSearchParams(window.location.search);
+            var idchoose = url.get('idchoose');
+            var formData = new FormData();
+            formData.append('coverImage', coverImageFile);
+            fetch('/api/postAPI/uploadImage', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        console.log("Up anh khong thanh cong");
+                        document.getElementById("errorpost").style.display = 'block';
+                    }
+                    return response.text(); // Trả về đường dẫn của ảnh đã upload
+                })
+                .then(imageUrl => {
+                    // Upload ảnh thành công, tiếp tục gửi request để tạo bài post
+                    return fetch('/api/postAPI/createPost', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            ChooseId: idchoose,
+                            CateId: cateId,
+                            PriceUp: priceUp,
+                            PriceTo: priceTo,
+                            Title: title,
+                            Content: editorContent,
+                            Technology: selectedTechnologies.join(', '),
+                            CoverImage: imageUrl
+                        })
+                    });
+                })
+                .then(response => {
+                    if (response.ok) {
+
+                        return response.text();
+
+                    } else {
+                        //throw new Error('Error creating post');
+                    }
+                })
+                .then(postId => {
+                    console.log("Up anh thanh cong");
+                    window.location.href = ("/checkout?idchoose=" + idchoose + "&postId=" + postId);
+                })
+                .catch(error => {
+                    // Xử lý lỗi
+                    document.getElementById("errorpost").style.display = 'block';
+                });
+        }
+        document.getElementById('priceContactCheckbox').addEventListener('change', function () {
+            // Kiểm tra xem checkbox có được chọn không
+            if (this.checked) {
+                // Nếu được chọn, làm cho các trường nhập "Giá từ" và "Giá đến" trở thành rỗng và vô hiệu hóa chúng
+                document.getElementById('priceup').value = '';
+                document.getElementById('priceto').value = '';
+                document.getElementById('priceup').disabled = true;
+                document.getElementById('priceto').disabled = true;
+            } else {
+                // Nếu không được chọn, kích hoạt lại các trường nhập "Giá từ" và "Giá đến"
+                document.getElementById('priceup').disabled = false;
+                document.getElementById('priceto').disabled = false;
+            }
+        });
+    </script>
+}

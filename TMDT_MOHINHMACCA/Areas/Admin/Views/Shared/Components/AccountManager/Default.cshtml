@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Account>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>
+            <div class="d-flex px-2 py-1">
+                <div>
+                    <img src="@item.Avatar" class="avatar avatar-sm me-3" alt="user1">
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-sm">@item.Username</h6>
+                    <p class="text-xs text-secondary mb-0">@item.Email</p>
+                </div>
+            </div>
+        </td>
+        <td>
+            <p class="text-xs font-weight-bold mb-0">@item.Role.RoleName</p>
+        </td>
+        <td>
+            <div class="d-flex px-2 py-1 justify-content-center">
+                @if (item.Validity == true)
+                {
+                    <form action="/Admin/Account/Band?username=@item.Username" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit" class="badge badge-sm bg-gradient-warning"
+                                onclick="return confirm(&quot;Bạn muốn khóa tài khoản này ?&quot;)">
+                            <i class="fa-solid fa-lock fa-lg text-danger"></i>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form action="/Admin/Account/Unband?username=@item.Username" method="post" class="me-2">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="badge badge-sm bg-gradient-info"
+                                onclick="return confirm(&quot;Bạn muốn mở khóa tài khoản này?&quot;)">
+                            <i class="fa-solid fa-unlock fa-lg"></i>
+                        </button>
+                    </form>
+                }
+                @if (item.RoleId != 1)
+                {
+                    <form action="/Admin/Account/AddAdmin?username=@item.Username" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit" class="badge badge-sm bg-gradient-success"
+                                onclick="return confirm(&quot;Bạn muốn thêm tài khoản này làm quản trị viên hả?&quot;)">
+                            <i class="fa-solid fa-user-shield fa-lg text-danger"></i>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form action="/Admin/Account/DeleteAdmin?username=@item.Username" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit" class="badge badge-sm bg-gradient-success"
+                                onclick="return confirm(&quot;Bạn muốn hủy quản trị viên của tài khoản này hả?&quot;)">
+                            <i class="fa-solid fa-times-circle fa-lg text-danger"></i>
+                        </button>
+                    </form>
+
+                }
+                <form action="/Admin/Account/Delete?username=@item.Username" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <button type="submit" class="badge badge-sm bg-gradient-danger"
+                            onclick="return confirm(&quot;Bạn muốn xóa tài khoản này?&quot;)">
+                        <i class="fa-solid fa-trash-can fa-lg text-danger"></i>
+                    </button>
+                </form>
+            </div>
+
+
+        </td>
+        <td class="align-middle text-center">
+            <span class="text-secondary text-xs font-weight-bold">@item.Signupdate?.ToString("dd/MM/yyyy hh:mm")</span>
+        </td>
+        <td class="align-middle">
+            <a href="@(item.Username == User.Identity?.Name ? "/myprofile" : "/user?username=" + item.Username)" class="text-secondary font-weight-bold text-xs">
+                Xem tài khoản
+            </a>
+        </td>
+    </tr>
+}

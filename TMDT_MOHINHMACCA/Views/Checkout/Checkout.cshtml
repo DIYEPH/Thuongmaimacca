@@ -1,0 +1,146 @@
+﻿@{
+    Layout = null;
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn Phương Thức Thanh Toán</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #000;
+                text-decoration: none;
+                cursor: pointer;
+            }
+    </style>
+</head>
+<body id="paymentContainer">
+    <div class="container">
+        <span class="close" onclick="closeContainer()">&times;</span>
+        <h2>Chọn Phương Thức Thanh Toán</h2>
+        @if (ViewBag.AccountHasEnoughMoney == true)
+        {
+            <a href="#" onclick="payBalance()" class="btn btn-success">Thanh toán bằng tài khoản</a>
+        }
+        else
+        {
+            <a href="#" class="btn btn-success disabled">Thanh toán bằng tài khoản</a>
+        }
+        <p>Số tiền phải trả: @ViewBag.AmountToPay.ToString("#,##0") VNĐ</p>
+        @if (ViewBag.AccountHasEnoughMoney == true)
+        {
+            <p style="color:green">Số tiền bạn có: @ViewBag.MyBalance.ToString("#,##0") VNĐ</p>
+        }
+        else
+        {
+            <p style="color:red">Bạn không đủ tiền</p>
+        }
+        <a href="#" onclick="payVNPay()" class="btn btn-primary">Thanh toán bằng VNPay</a>
+    </div>
+    <script>
+        var chooseId = "@ViewBag.ChooseId";
+        var buyer = "@User.Identity.Name";
+        var url = new URLSearchParams(window.location.search);
+        function closeContainer() {
+            var container = document.getElementById("paymentContainer");
+            container.style.display = "none";
+        }
+        function payVNPay() {
+            var formData = {
+                PostId: url.get('postId'),
+                ChooseId: chooseId, // Sử dụng giá trị đã được render từ Razor
+                Buyer: buyer, // Sử dụng giá trị đã được render từ Razor
+                payment: "VNPay" // Thêm thông tin về phương thức thanh toán vào formData
+            };
+
+            fetch('/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text(); // Trả về dữ liệu như là một chuỗi
+                    } else {
+                        throw new Error('Error in fetch');
+                    }
+                })
+                .then(redirectUrl => {
+                    window.location.href = redirectUrl; // Chuyển hướng đến đường dẫn URL
+                })
+                .catch(error => {
+                    window.parent.console.error(error);
+                });
+        }
+        function payBalance() {
+            var formData = {
+                PostId: url.get('postId'),
+                ChooseId: chooseId, // Sử dụng giá trị đã được render từ Razor
+                Buyer: buyer, // Sử dụng giá trị đã được render từ Razor
+                payment: "Balance" // Thêm thông tin về phương thức thanh toán vào formData
+            };
+
+            fetch('/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Thanh toán rồi");
+                        window.location.href="/success";
+                    }
+                    return response.text(); // Trả về đường dẫn của ảnh đã upload
+                })
+                .catch(error => {
+                });
+        }
+                        
+    </script>
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

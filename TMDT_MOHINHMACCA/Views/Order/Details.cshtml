@@ -1,0 +1,123 @@
+﻿@model IEnumerable<OrderDetail>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+@section Style {
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h3 {
+            text-align: center;
+        }
+
+        .order-details {
+            margin-bottom: 20px;
+        }
+
+            .order-details div {
+                margin-bottom: 10px;
+            }
+
+        .order-details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .order-details-table th, .order-details-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            .order-details-table th {
+                background-color: #f2f2f2;
+            }
+
+            .order-details-table tbody tr:hover {
+                background-color: #f5f5f5;
+            }
+
+        .order-detail {
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-gap: 10px;
+        }
+    </style>
+}
+<div class="container">
+    <h3>Thông tin đơn hàng</h3>
+    <div class="order-detail">
+
+        <div>Mã đơn hàng: @ViewBag.Order.OrderId</div>
+        <div>Ngày mua: @ViewBag.Order.OrderTime?.ToString("dd/MM/yyyy hh:mm:ss")</div>
+        <div>Người mua: @ViewBag.Order.Buyer</div>
+        <div>Người bán: @ViewBag.Order.Post.Username</div>
+
+    </div>
+    <h3>Chi tiết yêu cầu</h3>
+    <div class="order-details">
+
+        <div>Số ngày thực hiện: @ViewBag.Order.Numberday</div>
+        <div>Yêu cầu: @ViewBag.Order.Requirements</div>
+    </div>
+    <h3>Chi tiết đơn hàng</h3>
+    <div class="order-details">
+
+        <table class="order-details-table">
+            <thead>
+                <tr>
+                    <th>Thời gian</th>
+                    <th>Người thực hiện</th>
+                    <th>Loại yêu cầu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Stamptime?.ToString("dd/MM/yyyy hh:mm:ss")</td>
+                        <td>@item.Person</td>
+                        <td>
+                            @if (item.RequiType == "1")
+                            {
+                                <span>Đã xác nhận và thực hiện</span>
+                            }
+                            else if (item.RequiType == "2")
+                            {
+                                <span>Đã thực hiện xong</span>
+                            }
+                            else if (item.RequiType == "3")
+                            {
+                                <span>Hoàn thành</span>
+                            }
+                            else if (item.RequiType == "4")
+                            {
+                                <span>Đánh giá</span>
+                            }
+                            else if (item.RequiType == "5")
+                            {
+                                <span>Hủy đơn hàng</span>
+                            }
+                            else
+                            {
+                                <span>Không xác định</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

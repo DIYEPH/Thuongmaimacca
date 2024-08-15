@@ -1,0 +1,67 @@
+﻿@using TMDT_MOHINHMACCA.ViewModels
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<PostVM>
+
+<div class="row g-3 ">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 col-lg-4 col-xl-4 ">
+            <div class="rounded position-relative fruite-item  w3-card-2">
+                <div class="fruite-img ">
+                    <img src="@item.CoverImage" class="img-fluid w-100 rounded-top" style="height:230px" alt="">
+                </div>
+                @if (item.numberReview > 0)
+                {
+                    <div class="w3-blue rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">@item.Star/5<i class="fas fa-star" style="color: gold;"></i></div>
+                }
+                else
+                {
+                    <div class="w3-blue rounded text-white position-absolute start-0 top-0 m-4 py-1 px-3">0/0<i class="fas fa-star" style="color: gold;"></i></div>
+                }
+                <div class="p-4 ">
+                    <h5>@item.Title</h5>
+                    <p>Người bán: <a href="@(item.UsernameNavigation?.Username == User.Identity?.Name ? "/myprofile" : "/user?username=" + item.UsernameNavigation?.Username)">@item.UsernameNavigation.Fullname</a></p>
+                    <div class="d-flex justify-content-between flex-lg-wrap">
+                        <p class="text-dark fs-5 fw-bold mb-0">
+                            Giá:  @if (item.PriceUp == 0 && item.PriceTo == 0)
+                            {
+                                <span class="w3-text-blue">Liên hệ</span>
+                            }
+                            else
+                            {
+                                <span>@item.PriceUp?.ToString("N0") VNĐ - @item.PriceTo?.ToString("N0") VNĐ</span>
+                            }
+                        </p>
+                        
+                    </div>
+                    <a href="/postdetail?id=@item.PostId" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Xem ngay</a>
+                </div>
+                <div class="d-flex border-top">
+                    <small class="flex-fill text-center border-end py-2"><i class="fas fa-check-circle text-primary me-2"></i>@item.numberOrder hoàn thành</small>
+                    <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>@item.numberReview đánh giá </small>
+                    <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>@item.numberCmt bình luận</small>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="col-12">
+        <div class="pagination d-flex justify-content-center mt-5">
+            @Html.PagedListPager(
+                     Model,
+                     page => Url.Action("Index", new { page = page }),
+                     new PagedListRenderOptions
+            {
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new[] { "page-item" },
+                PageClasses = new[] { "page-link", "rounded" },
+                ActiveLiElementClass = "active",
+                LinkToPreviousPageFormat = "&laquo;",
+                LinkToNextPageFormat = "&raquo;",
+                DisplayLinkToFirstPage = PagedListDisplayMode.Never,
+                DisplayLinkToLastPage = PagedListDisplayMode.Never,
+                DisplayLinkToIndividualPages = true
+            })
+        </div>
+    </div>
+</div>

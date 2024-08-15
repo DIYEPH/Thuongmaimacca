@@ -1,0 +1,275 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = " Chi tiết bài đăng";
+}
+@model Post
+@section Style {
+    <style>
+        /* CSS để thiết kế giao diện */
+        #chatContainer {
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .chatMessage {
+            cursor: pointer;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+            .chatMessage:hover {
+                background-color: #e9e9e9;
+            }
+
+            .chatMessage.selected {
+                background-color: #cfd8dc; /* Màu nền được chọn */
+            }
+    </style>
+}
+@if (Model != null)
+{
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="">
+                <div class="row g-2">
+                    <div class="col-12 col-sm-8">
+                        <img class="flex-shrink-0 img-fluid border rounded" src="@Model?.CoverImage" alt="" style="width: 100%; height: auto">
+                    </div>
+                    <div class="text-start ps-4 col-12 col-sm-4">
+                        <h4 class="mb-3">Danh mục: <span class="h5">@Model?.Cate?.CateName</span></h4>
+                        <h3 class="mb-3 w3-text-blue">@Model?.Title</h3>
+                        <p class="text-truncate me-3">
+                            <i class="fa fa-user text-primary me-2"></i>Người bán:
+                            <a href="@(Model?.UsernameNavigation?.Username == User.Identity?.Name ? "/myprofile" : "/user?username=" + Model?.UsernameNavigation?.Username)">
+                                <img class="avatar" src="@Model?.UsernameNavigation?.Avatar" />
+                                <span>@Model?.UsernameNavigation?.Fullname</span>
+                            </a>
+                        </p>
+                        <p class="text-truncate me-3"><i class="fa fa-desktop text-primary me-2"></i>Công nghệ: @Model?.Technology</p>
+                        <p class="text-truncate me-0">
+                            <i class="far fa-money-bill-alt text-primary me-2"></i>Giá: @if (Model.PriceUp == 0 && Model.PriceTo == 0)
+                            {
+                                <span>Liên hệ</span>
+                            }
+                            else
+                            {
+                                <span>@Model.PriceUp?.ToString("N0") VNĐ - @Model.PriceTo?.ToString("N0") VNĐ</span>
+                            }
+                        </p>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="mb-5 col-12 col-sm-8">
+                        <h4 class="mb-3" style="padding-top:16px">Mô tả:</h4>
+                        <div>@Html.Raw(Model?.Content)</div>
+                        <h4 class="mb-3">Đánh giá:</h4>
+                        <div class="rate_container">
+                            <div class="rate_container">
+                                @foreach (var item in ViewBag.ListOrer)
+                                {
+                                    <div class="job-item p-4 mb-4">
+                                        <div class="row g-4">
+                                            <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                                <img class="flex-shrink-0 img-fluid border rounded" src="@item.BuyerNavigation.Avatar" alt="" style="width: 80px; height: 80px;">
+                                                <div class="text-start ps-4">
+                                                    <h5 class="mb-3">@item.BuyerNavigation.Fullname</h5>
+                                                    @{
+                                                        for (int i = 0; i < (int)item.Star; i++)
+                                                        {
+                                                            <i class="fa fa-star text-primary me-2"></i>
+                                                        }
+                                                    }
+                                                    <span class="text-truncate me-3"><br>@item.Review<br></span>
+                                                    @{
+                                                        var postId = Model.PostId;
+                                                        var orderDetailFiltered = new List<OrderDetail>();
+
+                                                        foreach (var orderDetail in item.OrderDetails)
+                                                        {
+                                                                orderDetailFiltered.Add(orderDetail);
+                                                        }
+
+                                                        if (orderDetailFiltered.Any())
+                                                        {
+                                                            var lastOrderDetail = orderDetailFiltered.Last();
+                                                            @lastOrderDetail.Stamptime.ToString();
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.Raw("Không có")
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                                   
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (User.Identity.IsAuthenticated && Model.Status=="1")
+                    {
+                        string? username = User.Identity.Name;
+                        if (username != Model?.Username)
+                        {
+                            <div class="col-12 col-sm-4">
+                                <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
+                                    <form>
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <input type="number" id="price_agreed" class="form-control" placeholder="Giá đã thỏa thuận">
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="number" id="number_day" class="form-control" placeholder="Số ngày hoàn thành">
+                                            </div>
+                                            <div class="col-12">
+                                                <textarea class="form-control" id="requirement_detail" rows="5" placeholder="Chi tiết yêu cầu"></textarea>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <button id="btn_Order" onclick="validateOrder()" class="btn btn-primary w-100" type="button">Đặt hàng</button>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <button id="btn_sendMess" onclick="displayChat()" class="btn btn-primary w-100" type="button">Nhắn tin</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div id="chatContainer" style="display:none">
+                                        <h6>Hãy gửi lời chào</h6>
+                                        <input class="chatMessage" id="textMessage" type="text" style="width:100%" />
+                                        <div class="chatMessage" onclick="selectMessage(this)">Mặt hàng này còn không, shop?</div>
+                                        <div class="chatMessage" onclick="selectMessage(this)">Hé lô bà già?</div>
+                                        <div class="chatMessage" onclick="selectMessage(this)">Giá sản phẩm là bao nhiêu?</div>
+                                        <div class="chatMessage" onclick="selectMessage(this)">Bạn có thể hạ giá không?</div>
+                                        <div class="chatMessage" onclick="selectMessage(this)">Cám ơn bạn!</div>
+                                        <div class="chatMessage" onclick="selectMessage(this)">Có thể tư vấn thêm về sản phẩm này không?</div>
+                                        <a href="#" class="btn" onclick="sendMessage()">Gửi</a>
+                                    </div>
+                                </div>
+                                <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
+                                    <h4 class="mb-4">Hướng dẫn đặt hàng:</h4>
+                                    <p><i class="fa fa-angle-right text-primary me-2"></i>Bước 1: Nhắn tin với Shop nói rõ yêu cầu phần mềm cần làm và chờ xác nhận báo giá. Sau đó khách hàng có thể mặc cả giá với người bán. </p>
+                                    <p><i class="fa fa-angle-right text-primary me-2"></i>Bước 2: Order đơn hàng, nhập số ngày hoàn thành dự án, nhập giá tiền mà 2 bên đã nhắn tin thỏa thuận.</p>
+                                    <p><i class="fa fa-angle-right text-primary me-2"></i>Bước 3: Viết yêu cầu chi tiết cần thực hiện như thỏa thuận tại tin nhắn và nhấn Đặt hàng.</p>
+                                </div>
+
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="container text-center">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <a class="btn btn-primary py-3 px-5" href="/shop">Xem thêm bài đăng khác</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section Script {
+    <script>
+        let selectedMessageElement = null;
+        function selectMessage(element) {
+            if (selectedMessageElement) {
+                selectedMessageElement.classList.remove("selected");
+            }
+            selectedMessageElement = element
+            selectedMessageElement.classList.add("selected");
+        }
+        function sendMessage() {
+            var textMessage = document.getElementById("textMessage").value;
+
+            if (textMessage.length === 0 && !selectedMessageElement) {
+                // Nếu không có tin nhắn để gửi và không có tin nhắn nào được chọn từ danh sách
+                alert('Vui lòng nhập tin nhắn hoặc chọn một tin nhắn để gửi.');
+                return;
+            }
+
+            var messageToSend = window.location.href + "\n" + (textMessage || (selectedMessageElement ? selectedMessageElement.textContent : ''));
+
+            // Gửi tin nhắn thông qua API sử dụng fetch
+            fetch('/api/MessageAPI/Create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ReceiverId: '@Model.Username',
+                    Content: messageToSend
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Lỗi khi gửi tin nhắn: ' + response.status);
+                    }
+                    return response.json(); // Giải mã JSON từ phản hồi
+                })
+                .then(data => {
+                    console.log('Đã gửi tin nhắn thành công:', data);
+                    console.log('@Model.Username');
+                    // Hiển thị thông báo gửi tin nhắn thành công
+                    window.location.href = '/chat';
+                    // viewModel.joinedRoom('@Model.Username'); // Gán giá trị mới cho joinedRoom()
+                })
+                .catch(error => {
+                    console.error('Lỗi khi gửi tin nhắn:', error);
+                    // Hiển thị thông báo lỗi khi gửi tin nhắn
+                    alert('Có lỗi xảy ra khi gửi tin nhắn. Vui lòng thử lại sau.');
+                });
+        }
+        function displayChat() {
+            var chatContainer = document.getElementById("chatContainer");
+            chatContainer.style.display = 'block';
+        }
+        function validateOrder() {
+            var priceAgreed = document.getElementById('price_agreed').value;
+            var numberDay = document.getElementById('number_day').value;
+            var requirementDetail = document.getElementById('requirement_detail').value;
+            if (priceAgreed.trim() === '' || numberDay.trim() === '' || requirementDetail.trim() === '') {
+                alert('Vui lòng điền đầy đủ thông tin');
+            } else {
+                // Nếu các trường không trống, tiến hành đặt hàng
+                Order(priceAgreed, numberDay, requirementDetail); // Gọi hàm Order() hoặc thực hiện hành động cần thiết ở đây
+            }
+        }
+        function Order(priceAgreed, numberDay, requirementDetail) {
+
+            fetch('/api/OrderAPI/Order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    PostId: @Model.PostId,
+                    Price: priceAgreed,
+                    Requirements: requirementDetail,
+                    NumberDay: numberDay
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Xử lý kết quả thành công (nếu cần)
+                        alert('Đặt hàng thành công!');
+                        window.location.href = "/myorders"
+                    } else {
+                        // Xử lý lỗi (nếu cần)
+                        console.error('Đặt hàng thất bại!');
+                    }
+                })
+                .catch(error => {
+                    // Xử lý lỗi nếu có lỗi xảy ra trong quá trình gửi yêu cầu
+                    console.error('Đã xảy ra lỗi:', error);
+                });
+        }
+    </script>
+    }
+}

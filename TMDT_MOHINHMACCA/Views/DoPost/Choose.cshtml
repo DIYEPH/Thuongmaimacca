@@ -1,0 +1,57 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Chọn gói bài đăng";
+}
+@model IEnumerable<Choose>
+<div class="w3-container " id="packages" style="margin-top:30px">
+    <h1 class="w3-xxlarge w3-text-red w3-center"><b>Các gói bài đăng hiện có của chúng tôi</b></h1>
+    <hr style="width:100%; solid red" class="w3-round">
+</div>
+<div class="w3-row-padding">
+    @foreach(var item in Model)
+    {
+        <div class="w3-third ">
+            <ul class="w3-ul w3-light-grey w3-center">
+                <li class="w3-dark-grey w3-xlarge w3-padding-32"><b>@item.ChooseName</b>
+                    @if (item.Discount > 0)
+                    {
+                        <h2 style="position: relative; display: inline-block;">
+                            <div style="position: absolute; top: -60px; left: 20px; z-index: 1; background-color: yellow; padding: 3px; border-radius: 5px;">
+                                <span class="w3-text-red">
+                                    -@item.Discount%
+                                </span>
+                            </div>
+                        </h2>
+                    }                   
+                </li>
+                <li class="w3-padding-16 h4"><span>@item.ChooseTime</span> ngày</li>
+                <li class="w3-padding-16">@item.Description</li>
+                <li class="w3-padding-16">@item.Rate</li>
+                <li class="w3-padding-16">
+                    @{
+                        var discountPrice = item.Price * (1-item.Discount / 100.0);
+                    }
+                    @if (item.Discount == 0)
+                    {
+                        <h2>@item.Price</h2>
+                        <span class="w3-opacity">VNĐ</span>
+                    }
+                    else
+                    {
+                        <h2><strike class="w3-opacity-max">@item.Price</strike></h2>
+                        <h2 style="position: relative; display: inline-block;">
+                            <span class="w3-text-red" style="position: absolute; top: -40px; left: -20px; z-index: 1;">
+                                @discountPrice
+                            </span>
+                        </h2>
+                        <span class="w3-opacity">VNĐ</span>
+                    }
+                </li>
+                <li class="w3-light-grey w3-padding-24">
+                    <a href="/uppost?idchoose=@item.ChooseId" class="w3-button w3-white w3-padding-large w3-hover-black">ĐĂNG KÝ GÓI NÀY</a>
+                </li>
+            </ul>
+        </div>
+    }
+    
+</div>

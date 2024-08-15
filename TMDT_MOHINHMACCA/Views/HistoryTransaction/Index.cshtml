@@ -1,0 +1,127 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Lịch sử giao dịch";
+}
+@model IEnumerable<Transactionhistory>
+@section Style {
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h3 {
+            text-align: center;
+        }
+
+        .order-details {
+            margin-bottom: 20px;
+        }
+
+            .order-details div {
+                margin-bottom: 10px;
+            }
+
+        .order-details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+            .order-details-table th, .order-details-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+
+            .order-details-table th {
+                background-color: #f2f2f2;
+            }
+
+            .order-details-table tbody tr:hover {
+                background-color: #f5f5f5;
+            }
+
+        .order-detail {
+            display: grid;
+            grid-template-columns: auto auto;
+            grid-gap: 10px;
+        }
+    </style>
+}
+<div class="container">
+    <h3>Lịch sử giao dịch</h3>
+    <div class="order-details">
+        <table class="order-details-table">
+            <thead>
+                <tr>
+                    <th>Thời gian</th>
+                    <th>Loại giao dịch</th>
+                    <th>Số tiền giao dịch (VNĐ)</th>
+                    <th>Số tiền ban đầu (VNĐ)</th>
+                    <th>Số tiền cuối (VNĐ)</th>
+                    <th>Nội dung giao dịch</th>
+                    <th>Phương thức</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.TransactionDate?.ToString("dd/MM/yyyy hh:mm:ss")</td>
+                        <td>
+                            @if (item.TransactionType == "0")
+                            {
+                                <span>Đăng ký</span>
+                            }
+                            else if (item.TransactionType == "1")
+                            {
+                                <span>Nạp tiền</span>
+                            }
+                            else if (item.TransactionType == "2")
+                            {
+                                <span>Đăng bài</span>
+                            }
+                            else if (item.TransactionType == "3")
+                            {
+                                <span>Chấp nhận đơn hàng</span>
+                            }
+                            else if (item.TransactionType == "4")
+                            {
+                                <span>Hoàn trả</span>
+                            }
+                            else
+                            {
+                                <span>Không xác định</span>
+                            }
+                        </td>
+                        <td>@item.Amountmoney?.ToString("N0")</td>
+                        <td>@item.Initialbalance?.ToString("N0")</td>
+                        <td>@item.Finalbalance?.ToString("N0")</td>
+                        <td>@item.Content</td>
+                        <td>@if (item.Payments == "0")
+                            {
+                                <span>Web</span>
+                            }
+                            else if (item.Payments=="1")
+                            {
+                                <span>VNPay</span>
+                            }
+                            else
+                            {
+                                <span>Chưa xác định</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

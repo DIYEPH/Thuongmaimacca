@@ -1,0 +1,82 @@
+﻿@using TMDT_MOHINHMACCA.Models
+@{
+    Layout = "~/Areas/Admin/Views/_LayoutAdmin.cshtml";
+    ViewData["PageTitle"] = "Quản lý bài đăng";
+}
+@model IEnumerable<Post>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>Các bài đăng</h6>
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="col-xl-4">
+                            <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+                                <label for="fruits">Phân loại theo:</label>
+                                <select id="fruits" name="fruitlist" class="border-0 form-select-sm bg-light me-3" form="fruitform">
+                                    <option value="saab">Đã duyệt</option>
+                                    <option value="volvo">Chưa duyệt</option>                         
+                                    <option value="saab">Cần gia hạn</option>
+                                    <option value="opel">Tất cả</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Bài đăng</th>
+                                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Danh mục</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hành động</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tình trạng</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày duyệt</th>
+                                        <th class="text-secondary opacity-7"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div>
+                                                        <img src="@item.CoverImage" class="avatar avatar-sm me-3" alt="user1">
+                                                    </div>
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">@item.Title</h6>
+                                                        <p class="text-xs text-secondary mb-0">@item.Technology</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">@item.Cate.CateName</p>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="badge badge-sm bg-gradient-success">Đang phát triển</span>
+                                            </td>
+                                            <td class="align-middle text-center text-sm">
+                                                <span class="badge badge-sm bg-gradient-success">Đang phát triển</span>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <span class="text-secondary text-xs font-weight-bold">@item.PostApprovedtime?.ToString("dd/MM/yyyy hh:mm:ss")</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <a href="/postdetail?id=@item.PostId" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
+                                                    Xem chi tiết
+                                                </a>
+                                            </td>
+                                        </tr>
+
+                                    }                                 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

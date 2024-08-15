@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="icon" href="/img/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/signup_style.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
+    <style>
+        .validation-summary-errors ul {
+            list-style-type: none; /* Loại bỏ dấu chấm */
+            padding: 0;
+            margin: 0;
+        }
+
+        .validation-summary-errors li {
+            display: none; /* Ẩn các phần tử li */
+        }
+    </style>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8Q71QC0CHZ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-8Q71QC0CHZ');
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="header">
+            <div class="header-container">
+                <h2 class="logo">ProCodeHire</h2>
+            </div>
+        </div>
+        @RenderBody()
+    </div>
+    <ejs-scripts></ejs-scripts>
+</body>
+
+</html>
