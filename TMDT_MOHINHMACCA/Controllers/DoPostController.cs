@@ -12,10 +12,10 @@ namespace TMDT_MOHINHMACCA.Controllers
         private readonly ShopmaccaContext _db;
         private readonly IFirebaseStorageService _firebaseStorageService;
 
-        public DoPostController(IFirebaseStorageService firebaseStorageService,ShopmaccaContext db)
+        public DoPostController(IFirebaseStorageService firebaseStorageService, ShopmaccaContext db)
         {
             _db = db;
-            _firebaseStorageService=firebaseStorageService;
+            _firebaseStorageService = firebaseStorageService;
         }
         [Authorize]
         [Route("/uppost")]
@@ -34,9 +34,9 @@ namespace TMDT_MOHINHMACCA.Controllers
         [Route("/postdetail")]
         public IActionResult PostDetail(int id)
         {
-            var post = _db.Posts.Include(p=>p.Cate).Include(p=>p.UsernameNavigation).Where(p=>p.PostId== id).FirstOrDefault();
-            var orderbypost = _db.Orders.Where(p => p.PostId == id && p.Star != null).Include(p=>p.BuyerNavigation).Include(p=>p.OrderDetails).ToList();
-            
+            var post = _db.Posts.Include(p => p.Cate).Include(p => p.UsernameNavigation).Where(p => p.PostId == id).FirstOrDefault();
+            var orderbypost = _db.Orders.Where(p => p.PostId == id && p.Star != null).Include(p => p.BuyerNavigation).Include(p => p.OrderDetails).ToList();
+
             ViewBag.ListOrer = orderbypost;
             return View(post);
         }

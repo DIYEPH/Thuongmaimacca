@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace TMDT_MOHINHMACCA.ViewModels
+﻿namespace TMDT_MOHINHMACCA.ViewModels
 {
     public class BalanceVM
     {

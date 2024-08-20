@@ -16,7 +16,7 @@ namespace TMDT_MOHINHMACCA.Controllers
         public IActionResult Index()
         {
             var user = _db.Accounts.Find(User.Identity.Name);
-            var histories= _db.Transactionhistories.Where(p=>p.Username==user.Username).OrderBy(p=>p.TransactionDate).ToList();
+            var histories = _db.Transactionhistories.Where(p => p.Username == user.Username).OrderBy(p => p.TransactionDate).ToList();
             return View(histories);
         }
     }

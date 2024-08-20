@@ -31,7 +31,7 @@ namespace TMDT_MOHINHMACCA.Areas.Admin.Controllers
             var account = _db.Accounts.Find(username);
             if (username == User.Identity.Name)
                 return RedirectToAction(nameof(Index), new { error = "Không thể khóa tài khoản của chính mình!" });
-            if (account != null && account.Validity==true && username!=User.Identity.Name)
+            if (account != null && account.Validity == true && username != User.Identity.Name)
                 account.Validity = false;
             _db.SaveChanges();
             return RedirectToAction(nameof(Index));
@@ -72,7 +72,7 @@ namespace TMDT_MOHINHMACCA.Areas.Admin.Controllers
                     _db.Remove(account);
                 _db.SaveChanges();
             }
-            catch 
+            catch
             {
                 return RedirectToAction(nameof(Index), new { error = "Tài khoản trên đã có dữ liệu, không thể xoas!" });
             }

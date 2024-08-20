@@ -59,7 +59,7 @@ namespace TMDT_MOHINHMACCA.Areas.Admin.Controllers
             var post = _db.Posts.Include(p => p.Choose).Where(p => p.PostId == id).SingleOrDefault();
             if (post.Status == "0")
                 post.Status = "k";
-             var refunds = post.Choose.Price;
+            var refunds = post.Choose.Price;
             var account = _db.Accounts.Where(p => p.Username == post.Username).FirstOrDefault();
 
             var history = new Transactionhistory();

@@ -1,8 +1,6 @@
 ﻿using Firebase.Auth;
 using Firebase.Storage;
-using System.Net.Sockets;
 using TESTSTORAGE.Helpers;
-using TESTSTORAGE.ViewModels;
 
 namespace TMDT_MOHINHMACCA.Services
 {
@@ -14,12 +12,12 @@ namespace TMDT_MOHINHMACCA.Services
         private readonly string _authPassword;
         public FirebaseStorageService()
         {
-            _apiKey= StorageDataAccess.GetAPIKey();
+            _apiKey = StorageDataAccess.GetAPIKey();
             _bucketName = StorageDataAccess.GetBucket();
             _authEmail = StorageDataAccess.GetAuthEmail();
             _authPassword = StorageDataAccess.GetAuthPassword();
         }
-        public async Task<string> UploadImageAsync(IFormFile file,string firebase_filename)
+        public async Task<string> UploadImageAsync(IFormFile file, string firebase_filename)
         {
             string imageUrl = null;
 

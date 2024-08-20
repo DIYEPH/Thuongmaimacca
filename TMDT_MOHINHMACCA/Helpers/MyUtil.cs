@@ -4,7 +4,7 @@ namespace TMDT_MOHINHMACCA.Helpers
 {
     public class MyUtil
     {
-        public static string UploadHinh(IFormFile file,string folder)
+        public static string UploadHinh(IFormFile file, string folder)
         {
             try
             {
@@ -13,17 +13,17 @@ namespace TMDT_MOHINHMACCA.Helpers
                     file.CopyTo(myfile);
                 return file.FileName;
             }
-            catch 
+            catch
             {
                 return string.Empty;
             }
         }
-        public static string GenerateRandomKey(int length=5)
+        public static string GenerateRandomKey(int length = 5)
         {
             var pattern = @"qazwsxedcrfvtgbyhn ujmikolpQAZWSXEDCRFVTGBYHNUJMIKOLP!";
             var random = new Random();
             var sb = new StringBuilder();
-            for (int i = 0;i< length; i++)
+            for (int i = 0; i < length; i++)
                 sb.Append(pattern[random.Next(0, pattern.Length)]);
             return sb.ToString();
         }

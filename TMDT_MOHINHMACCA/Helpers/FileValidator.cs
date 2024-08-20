@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using System.IO;
-using System.Linq;
-
-namespace Chat.Web.Helpers
+﻿namespace Chat.Web.Helpers
 {
     public class FileValidator : IFileValidator
     {

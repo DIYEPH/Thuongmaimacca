@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TMDT_MOHINHMACCA.Models;
 using TMDT_MOHINHMACCA.Services;
 using TMDT_MOHINHMACCA.ViewModels;
@@ -23,7 +22,7 @@ namespace TMDT_MOHINHMACCA.Controllers
         [HttpPut("updateAvatar")]
         public async Task<IActionResult> UploadAvatarToFirebase([FromForm] UpdateAvatarVM model)
         {
-            if (model == null || string.IsNullOrEmpty(model.Username) || model.Avatar==null)
+            if (model == null || string.IsNullOrEmpty(model.Username) || model.Avatar == null)
             {
                 return BadRequest("Dữ liệu không hợp lệ");
             }
@@ -42,12 +41,12 @@ namespace TMDT_MOHINHMACCA.Controllers
                     _db.SaveChanges();
                 }
                 return Ok(new { imageUrl });
-            }          
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error uploading image: {ex.Message}");
             }
-            
+
         }
     }
 }

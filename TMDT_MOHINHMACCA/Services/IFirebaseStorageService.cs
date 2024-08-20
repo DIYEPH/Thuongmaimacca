@@ -2,6 +2,6 @@
 {
     public interface IFirebaseStorageService
     {
-         Task<string> UploadImageAsync(IFormFile imageFile, string firebase_filename);
+        Task<string> UploadImageAsync(IFormFile imageFile, string firebase_filename);
     }
 }

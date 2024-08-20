@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
 using TMDT_MOHINHMACCA.Models;
-using TMDT_MOHINHMACCA.ViewModels;
 
 namespace TMDT_MOHINHMACCA.Controllers
 {
@@ -21,12 +19,12 @@ namespace TMDT_MOHINHMACCA.Controllers
         [Route("/myprofile")]
         [HttpGet]
         public IActionResult Profile()
-        {          
+        {
             string? username = User.Identity.Name;
-            Account account=new Account();
+            Account account = new Account();
             if (username != null)
             {
-                account = _db.Accounts.Include(a => a.Role).Include(a=>a.Posts).SingleOrDefault(ac => ac.Username == username);
+                account = _db.Accounts.Include(a => a.Role).Include(a => a.Posts).SingleOrDefault(ac => ac.Username == username);
             }
             ViewBag.Balance = account.Money;
             return View(account);

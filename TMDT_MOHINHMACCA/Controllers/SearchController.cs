@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TMDT_MOHINHMACCA.ViewComponents;
 
 namespace TMDT_MOHINHMACCA.Controllers
 {

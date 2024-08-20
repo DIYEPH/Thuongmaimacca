@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 using TMDT_MOHINHMACCA.Models;
 
 namespace TMDT_MOHINHMACCA.ViewComponents
@@ -14,7 +13,7 @@ namespace TMDT_MOHINHMACCA.ViewComponents
         }
         public IViewComponentResult Invoke()
         {
-            var categories = _db.Categories.AsNoTracking().OrderBy(p=>p.CateId);
+            var categories = _db.Categories.AsNoTracking().OrderBy(p => p.CateId);
             return View(categories);
         }
     }

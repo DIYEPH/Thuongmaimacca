@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using TMDT_MOHINHMACCA.Helpers;
 using TMDT_MOHINHMACCA.Models;
@@ -67,7 +66,7 @@ namespace TMDT_MOHINHMACCA.Controllers
             {
                 return NotFound("Account not found");
             }
-            
+
             var history = new Transactionhistory();
             history.Username = account.Username;
             history.Amountmoney = response.Amount;

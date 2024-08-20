@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System.Security.Claims;
-using TESTSTORAGE.ViewModels;
 using TMDT_MOHINHMACCA.Models;
 using TMDT_MOHINHMACCA.Services;
 
@@ -28,7 +24,7 @@ namespace TMDT_MOHINHMACCA.Controllers
             try
             {
                 // Xử lý tải ảnh lên Firebase và nhận đường dẫn imageUrl
-                var imageUrl = await _firebaseStorageService.UploadImageAsync(coverImage,"CoverPost");
+                var imageUrl = await _firebaseStorageService.UploadImageAsync(coverImage, "CoverPost");
                 return Ok(imageUrl);
             }
             catch (Exception ex)
@@ -55,6 +51,6 @@ namespace TMDT_MOHINHMACCA.Controllers
                 return StatusCode(500, $"Error creating post: {ex.Message}");
             }
         }
-        
+
     }
 }

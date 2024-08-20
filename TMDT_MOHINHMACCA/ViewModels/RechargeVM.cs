@@ -2,7 +2,7 @@
 {
     public class RechargeVM
     {
-        public int deposit_amount {  get; set; }
+        public int deposit_amount { get; set; }
         public string payment_method { get; set; }
         public string username { get; set; }
 

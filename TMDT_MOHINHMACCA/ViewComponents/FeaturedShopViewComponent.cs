@@ -24,11 +24,11 @@ namespace TMDT_MOHINHMACCA.ViewComponents
                 .Where(p => p.Status == "1")
                 .ToList();
 
-            var postsVMList = new List<PostVM>(); 
+            var postsVMList = new List<PostVM>();
 
             foreach (var post in posts)
             {
-                var postVM = _mapper.Map<PostVM>(post); 
+                var postVM = _mapper.Map<PostVM>(post);
 
                 double totalStars = 0.0;
                 int numberOfReviews = 0;

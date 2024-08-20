@@ -18,7 +18,7 @@ namespace TMDT_MOHINHMACCA.Areas.Admin.Controllers
         [Route("Index")]
         public IActionResult Index()
         {
-            var posts = _db.Posts.Include(p=>p.Cate).Where(p=> p.Status!="0" && p.Status!="c").ToList();
+            var posts = _db.Posts.Include(p => p.Cate).Where(p => p.Status != "0" && p.Status != "c").ToList();
             return View(posts);
         }
     }

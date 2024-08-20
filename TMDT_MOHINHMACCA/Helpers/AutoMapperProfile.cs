@@ -4,9 +4,10 @@ using TMDT_MOHINHMACCA.ViewModels;
 
 namespace TMDT_MOHINHMACCA.Helpers
 {
-    public class AutoMapperProfile: Profile
+    public class AutoMapperProfile : Profile
     {
-        public AutoMapperProfile() {
+        public AutoMapperProfile()
+        {
             CreateMap<SignupVM, Account>();
             CreateMap<LoginVM, Account>();
             CreateMap<Account, ProfileVM>();

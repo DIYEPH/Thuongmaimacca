@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TMDT_MOHINHMACCA.Models;
 using TMDT_MOHINHMACCA.ViewModels;
 
@@ -13,7 +12,7 @@ namespace TMDT_MOHINHMACCA.ViewComponents
             _db = db;
         }
         public IViewComponentResult Invoke()
-        {          
+        {
             string username = User.Identity.Name;
             var balanceAmount = _db.Accounts
     .Where(p => p.Username == username)

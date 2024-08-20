@@ -7,7 +7,7 @@ using X.PagedList;
 
 namespace TMDT_MOHINHMACCA.ViewComponents
 {
-    public class PostsShopViewComponent: ViewComponent
+    public class PostsShopViewComponent : ViewComponent
     {
         private readonly ShopmaccaContext _db;
         private readonly IMapper _mapper;
@@ -16,7 +16,7 @@ namespace TMDT_MOHINHMACCA.ViewComponents
             _db = db;
             _mapper = mapper;
         }
-        public async Task<IViewComponentResult> InvokeAsync(int? page,int? categoryid,string searchInput, int rangeInput, string? username)
+        public async Task<IViewComponentResult> InvokeAsync(int? page, int? categoryid, string searchInput, int rangeInput, string? username)
         {
             int pagesize = 9;
             int pagenumber = (page == null || page < 0) ? 1 : page.Value;
@@ -33,14 +33,15 @@ namespace TMDT_MOHINHMACCA.ViewComponents
             if (!string.IsNullOrEmpty(searchInput))
             {
                 postsQuery = postsQuery.Where(p => p.Title.Contains(searchInput));
-            } if (username!=null)
+            }
+            if (username != null)
             {
-                postsQuery = postsQuery.Where(p => p.Username==username);
-            }    
-            if (rangeInput !=0)
+                postsQuery = postsQuery.Where(p => p.Username == username);
+            }
+            if (rangeInput != 0)
             {
-                postsQuery = postsQuery.Where(p => p.PriceUp <= rangeInput && p.PriceTo>=rangeInput);
-            }    
+                postsQuery = postsQuery.Where(p => p.PriceUp <= rangeInput && p.PriceTo >= rangeInput);
+            }
             var posts = await postsQuery.ToListAsync();
 
             var postsVMList = new List<PostVM>();

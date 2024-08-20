@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
 using TMDT_MOHINHMACCA.Helpers;
 using TMDT_MOHINHMACCA.Models;
@@ -89,12 +87,12 @@ namespace TMDT_MOHINHMACCA.Controllers
                         Signupdate = DateTime.Now,
                         GoogleId = googleId
                     };
-                    
+
                     var history = new Transactionhistory();
                     history.Username = account.Username;
                     history.Amountmoney = 0;
-                    history.Initialbalance=account.Money;
-                    history.Finalbalance=account.Money+=history.Amountmoney;
+                    history.Initialbalance = account.Money;
+                    history.Finalbalance = account.Money += history.Amountmoney;
                     history.TransactionDate = DateTime.Now;
                     history.TransactionType = "0";
                     history.Content = "Thưởng đăng ký";
@@ -102,7 +100,8 @@ namespace TMDT_MOHINHMACCA.Controllers
                     _db.Accounts.Add(account);
                     _db.Transactionhistories.Add(history);
                     await _db.SaveChangesAsync();
-                    await Task.Run(() => {
+                    await Task.Run(() =>
+                    {
                         var baseUrl = $"{this.Request.Scheme}://{this.Request.Host}";
                         var salesUrl = $"{baseUrl}/";
                         var receive = _db.Accounts.Find(account.Email);
@@ -133,8 +132,8 @@ namespace TMDT_MOHINHMACCA.Controllers
             if (account.RoleId == 1)
             {
                 return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
-            }         
-               return Redirect("/");
+            }
+            return Redirect("/");
         }
         [Route("/login")]
         [HttpPost]

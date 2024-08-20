@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TMDT_MOHINHMACCA.Models;
+﻿namespace TMDT_MOHINHMACCA.Models;
 
 public partial class Message
 {

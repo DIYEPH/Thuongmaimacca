@@ -54,7 +54,7 @@ namespace TMDT_MOHINHMACCA.Services
             var vnp_SecureHash = collections.FirstOrDefault(p => p.Key == "vnp_SecureHash").Value;
             var vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
             var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo");
-            long amount = Convert.ToInt64(vnpay.GetResponseData("vnp_Amount")) /100; 
+            long amount = Convert.ToInt64(vnpay.GetResponseData("vnp_Amount")) / 100;
 
             bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, _config["VnPay:HashSecret"]);
             if (!checkSignature)
@@ -67,7 +67,7 @@ namespace TMDT_MOHINHMACCA.Services
 
             return new VnPaymentResponseModel
             {
-                Amount =amount,
+                Amount = amount,
                 Success = true,
                 PaymentMethod = "VnPay",
                 OrderDescription = vnp_OrderInfo,

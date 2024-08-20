@@ -9,7 +9,8 @@ namespace TMDT_MOHINHMACCA.Controllers
     public class ChatController : Controller
     {
         private readonly IHubContext<ChatHub> _hubContext;
-        public ChatController(IHubContext<ChatHub> hubContext) { 
+        public ChatController(IHubContext<ChatHub> hubContext)
+        {
             _hubContext = hubContext;
         }
         [Route("/chat")]

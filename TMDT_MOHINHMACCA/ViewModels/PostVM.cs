@@ -28,7 +28,7 @@ namespace TMDT_MOHINHMACCA.ViewModels
 
         public string? Status { get; set; }
         public double? Star { get; set; }
-        public int numberReview {  get; set; }
+        public int numberReview { get; set; }
         public int numberOrder { get; set; }
         public int numberCmt { get; set; }
         public DateTime? PostApprovedtime { get; set; }

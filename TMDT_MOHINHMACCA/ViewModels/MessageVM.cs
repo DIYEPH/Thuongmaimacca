@@ -7,7 +7,7 @@
         public string? SenderId { get; set; }
         public string? ReceiverId { get; set; }
         public string? Avatarsender { get; set; }
-        public int? Status {  get; set; }
+        public int? Status { get; set; }
         public DateTime? Senttime { get; set; }
     }
 }

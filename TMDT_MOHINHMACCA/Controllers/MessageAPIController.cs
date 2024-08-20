@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
-using Firebase.Auth;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System.Linq;
-using System.Security.Claims;
 using TMDT_MOHINHMACCA.Helpers;
 using TMDT_MOHINHMACCA.Hubs;
 using TMDT_MOHINHMACCA.Models;
-using TMDT_MOHINHMACCA.Services;
 using TMDT_MOHINHMACCA.ViewModels;
 
 namespace TMDT_MOHINHMACCA.Controllers
@@ -132,7 +126,7 @@ namespace TMDT_MOHINHMACCA.Controllers
                           Lastmess = message.LastMessage?.Content,
                           Lastdate = message.LastMessage?.Senttime,
                           Unread = message.UnreadCount,
-                          Online= ChatHub._Connections.FirstOrDefault(c => c.Username == user.Username)!=null ? true: false,
+                          Online = ChatHub._Connections.FirstOrDefault(c => c.Username == user.Username) != null ? true : false,
                           Device = ChatHub._Connections.FirstOrDefault(c => c.Username == user.Username)?.Device
                       })
                 .OrderByDescending(userWithMessage => userWithMessage.Lastdate ?? DateTime.MinValue)

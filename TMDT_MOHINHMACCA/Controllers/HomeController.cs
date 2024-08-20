@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TMDT_MOHINHMACCA.Models;
@@ -32,7 +31,7 @@ namespace TMDT_MOHINHMACCA.Controllers
                 .Include(p => p.Cate)
                 .Include(p => p.UsernameNavigation)
                 .Include(p => p.Orders)
-                .Where(p => p.Status == "1").OrderByDescending(p=>p.PostApprovedtime)
+                .Where(p => p.Status == "1").OrderByDescending(p => p.PostApprovedtime)
                 .ToList();
 
             var postsVMList = new List<PostVM>(); // Danh sách để lưu trữ các bài đăng đã được ánh xạ
@@ -85,8 +84,8 @@ namespace TMDT_MOHINHMACCA.Controllers
         }
         [Route("/usermanual")]
         public IActionResult Privacy()
-        { 
-            return View(); 
+        {
+            return View();
         }
     }
 }

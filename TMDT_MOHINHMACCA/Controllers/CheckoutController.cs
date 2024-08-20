@@ -1,7 +1,5 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using TMDT_MOHINHMACCA.Helpers;
 using TMDT_MOHINHMACCA.Models;
@@ -35,7 +33,7 @@ namespace TMDT_MOHINHMACCA.Controllers
 
                     if (string.IsNullOrEmpty(username))
                     {
-                        return Unauthorized(); 
+                        return Unauthorized();
                     }
                     var account = _db.Accounts.FirstOrDefault(p => p.Username == username);
                     var choose = _db.Chooses.FirstOrDefault(p => p.ChooseId == idchoose);
@@ -96,7 +94,7 @@ namespace TMDT_MOHINHMACCA.Controllers
                             history.Username = account.Username;
                             history.Amountmoney = (decimal)chooseprice;
                             history.Initialbalance = account.Money;
-                            history.Finalbalance = account.Money-history.Amountmoney;
+                            history.Finalbalance = account.Money - history.Amountmoney;
                             DateTime utcNow = DateTime.UtcNow;
                             TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
                             DateTime vietnamTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, vietnamTimeZone);
@@ -110,7 +108,7 @@ namespace TMDT_MOHINHMACCA.Controllers
                                 account.Money -= (decimal)chooseprice;
                                 post.Status = "0";
                             }
-                            
+
                             _db.SaveChanges();
                             return Ok();
                         }
@@ -146,7 +144,7 @@ namespace TMDT_MOHINHMACCA.Controllers
                 _db.SaveChanges();
                 return RedirectToAction("PaymentFail");
             }
-            
+
             if (post.Status == "c")
             {
                 post.Status = "0";

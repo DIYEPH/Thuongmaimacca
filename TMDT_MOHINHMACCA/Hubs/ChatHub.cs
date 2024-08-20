@@ -1,26 +1,22 @@
 ﻿using AutoMapper;
-using Firebase.Auth;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using System.Text.RegularExpressions;
 using TMDT_MOHINHMACCA.Models;
-using TMDT_MOHINHMACCA.Services;
 using TMDT_MOHINHMACCA.ViewModels;
 
 namespace TMDT_MOHINHMACCA.Hubs
 {
-    public class ChatHub :Hub
+    public class ChatHub : Hub
     {
         ShopmaccaContext _db;
         IMapper _mapper;
-        public  static List<UserMessagerVM> _Connections = new List<UserMessagerVM>();
+        public static List<UserMessagerVM> _Connections = new List<UserMessagerVM>();
         private readonly static Dictionary<string, string> _ConnectionsMap = new Dictionary<string, string>();
-        public ChatHub(ShopmaccaContext db,IMapper mapper)
+        public ChatHub(ShopmaccaContext db, IMapper mapper)
         {
 
             _db = db;
-            _mapper= mapper;
+            _mapper = mapper;
         }
         private string Username
         {
@@ -31,18 +27,19 @@ namespace TMDT_MOHINHMACCA.Hubs
         }
         public async Task SendPrivate(string receiverId, string content)
         {
-            if (string.IsNullOrEmpty(content)) {
+            if (string.IsNullOrEmpty(content))
+            {
                 var message = new Message();
-                message.SenderId=Username;
-                message.Content= Regex.Replace(content, @"<.*?>", string.Empty);
-                message.ReceiverId=receiverId;
-                message.Senttime= DateTime.Now;
+                message.SenderId = Username;
+                message.Content = Regex.Replace(content, @"<.*?>", string.Empty);
+                message.ReceiverId = receiverId;
+                message.Senttime = DateTime.Now;
                 message.Status = 0;
 
                 //Send
                 await Clients.Client(Username).SendAsync("newMessage", message);
                 await Clients.Caller.SendAsync("newMessage", message);
-            }           
+            }
         }
         public override async Task OnConnectedAsync()
         {
@@ -62,7 +59,7 @@ namespace TMDT_MOHINHMACCA.Hubs
                     await Clients.Caller.SendAsync("getProfileInfo", userViewModel);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Clients.Caller.SendAsync("onError", "OnConnected:" + ex.Message);
             }
@@ -77,7 +74,7 @@ namespace TMDT_MOHINHMACCA.Hubs
                 _ConnectionsMap.Remove(user.Username);
                 await Clients.All.SendAsync("UserDisconnected", user);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Clients.Caller.SendAsync("onError", "OnDisconnected: " + ex.Message);
             }
@@ -89,8 +86,8 @@ namespace TMDT_MOHINHMACCA.Hubs
         }
         private string? GetDevice()
         {
-            var device= Context.GetHttpContext().Request.Headers["Device"].ToString();
-            if (!string.IsNullOrEmpty(device) && (device.Equals("Desktop")|| device.Equals("Mobile")))
+            var device = Context.GetHttpContext().Request.Headers["Device"].ToString();
+            if (!string.IsNullOrEmpty(device) && (device.Equals("Desktop") || device.Equals("Mobile")))
             {
                 return device;
             }

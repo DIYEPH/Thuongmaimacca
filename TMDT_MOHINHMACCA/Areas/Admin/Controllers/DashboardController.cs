@@ -23,7 +23,7 @@ namespace TMDT_MOHINHMACCA.Areas.Admin.Controllers
             DateTime StartDate = DateTime.Today.AddDays(-6);
             DateTime EndDate = DateTime.Today;
 
-            List<Post> PostsList = await _db.Posts.Include(x => x.Cate).Where(p=>p.Status=="1").ToListAsync();
+            List<Post> PostsList = await _db.Posts.Include(x => x.Cate).Where(p => p.Status == "1").ToListAsync();
 
             int TotalAccount = await _db.Accounts.CountAsync();
             ViewBag.TotalAccount = TotalAccount;
@@ -35,9 +35,9 @@ namespace TMDT_MOHINHMACCA.Areas.Admin.Controllers
 
             int TotalComplete = await _db.Orders.Where(p => p.Status == "3").CountAsync();
             ViewBag.TotalComplete = TotalComplete;
-        IEnumerable<Transactionhistory> history= _db.Transactionhistories.ToList();
-            decimal doanhthu =(decimal)history.Sum(p=>p.Finalbalance-p.Initialbalance);
-            ViewBag.Doanhthu=doanhthu;
+            IEnumerable<Transactionhistory> history = _db.Transactionhistories.ToList();
+            decimal doanhthu = (decimal)history.Sum(p => p.Finalbalance - p.Initialbalance);
+            ViewBag.Doanhthu = doanhthu;
             ViewBag.DoughnutChartData = PostsList.GroupBy(p => p.CateId).Select(k => new
             {
                 category = k.First().Cate.CateName,
@@ -51,7 +51,7 @@ namespace TMDT_MOHINHMACCA.Areas.Admin.Controllers
             {
                 day = k.First().PostApprovedtime?.ToString("dd/MM"),
                 count = k.Count()
-             })
+            })
             .ToList();
 
             string[] Last7Days = Enumerable.Range(0, 7)

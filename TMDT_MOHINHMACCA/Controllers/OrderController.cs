@@ -7,26 +7,26 @@ namespace TMDT_MOHINHMACCA.Controllers
 {
     [Authorize]
     public class OrderController : Controller
-	{
-		private readonly ShopmaccaContext _db;
-		public OrderController(ShopmaccaContext db)
-		{
-			_db = db;
-		}
-		[HttpGet]
-		[Route("/myorders")]
-		public IActionResult Orders()
-		{
-			string username = User.Identity.Name;
-			var order = _db.Orders.Include(p => p.Post.UsernameNavigation).Where(p=>p.Buyer == username).OrderByDescending(p=>p.OrderTime).ToList();
-			return View(order);
-		}
+    {
+        private readonly ShopmaccaContext _db;
+        public OrderController(ShopmaccaContext db)
+        {
+            _db = db;
+        }
+        [HttpGet]
+        [Route("/myorders")]
+        public IActionResult Orders()
+        {
+            string username = User.Identity.Name;
+            var order = _db.Orders.Include(p => p.Post.UsernameNavigation).Where(p => p.Buyer == username).OrderByDescending(p => p.OrderTime).ToList();
+            return View(order);
+        }
         [HttpGet]
         [Route("/mysales")]
         public IActionResult Sales()
         {
             string username = User.Identity.Name;
-            var order = _db.Orders.Include(p => p.Post.UsernameNavigation).Include(p=>p.BuyerNavigation).Where(p => p.Post.Username == username).OrderByDescending(p => p.OrderTime).ToList();
+            var order = _db.Orders.Include(p => p.Post.UsernameNavigation).Include(p => p.BuyerNavigation).Where(p => p.Post.Username == username).OrderByDescending(p => p.OrderTime).ToList();
             return View(order);
         }
         [HttpGet]
@@ -34,9 +34,9 @@ namespace TMDT_MOHINHMACCA.Controllers
         public IActionResult Details(int id)
         {
             string username = User.Identity.Name;
-            var order = _db.Orders.Include(p=>p.Post).Where(p=>p.OrderId==id).FirstOrDefault();
+            var order = _db.Orders.Include(p => p.Post).Where(p => p.OrderId == id).FirstOrDefault();
             ViewBag.Order = order;
-            var orderdetail = _db.OrderDetails.Where(p=>p.OrderId==id);
+            var orderdetail = _db.OrderDetails.Where(p => p.OrderId == id);
             return View(orderdetail);
         }
     }
