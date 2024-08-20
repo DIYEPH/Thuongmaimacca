@@ -2,6 +2,8 @@
 
 ![Project Banner](https://firebasestorage.googleapis.com/v0/b/propane-surfer-398404.appspot.com/o/anh1.png?alt=media&token=0fd8aba2-4545-4e4f-a548-24497f8c656e)
 
+Link deploy: (https://nolyeoghada2-001-site1.htempurl.com/)
+
 Project được thực hiện theo mô hình Thương mại mặc cả, tích hợp Signalr Chat RealTime! Với mục đích bán hàng, mô hình tạp hóa P2P. 
 Dự án được viết với công nghệ Asp.net Core 8, với mô hình MVC.
 
